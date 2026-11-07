@@ -4,7 +4,7 @@ Unity 测试题实作：竖屏守点小游戏，目标平台抖音小游戏（Un
 
 - 项目说明（运行、结构、TA、优化记录、已知问题、用时）：[GameUnity/README.md](GameUnity/README.md)
 - 性能问题定位与优化（第 3 题）：[GameUnity/PERFORMANCE.md](GameUnity/PERFORMANCE.md)
-- 笔试题答案：[GameUnity/笔试答案.md](GameUnity/笔试答案.md)
+- 笔试题作答：[GameUnity/笔试题作答.md](GameUnity/笔试题作答.md)
 
 ## 目录
 
