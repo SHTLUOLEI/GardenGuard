@@ -1,163 +1,136 @@
 # 90 秒守点（Defense90）
 
-竖屏守点小游戏，目标平台是抖音小游戏（Unity WebGL）。工程基于 DGame 框架，用到了 YooAsset 管资源、Luban 管配置、UniTask 做异步、UIModule 管窗口。
+一个竖屏守点小游戏，跑在抖音小游戏上（Unity WebGL）。工程用的是 DGame 框架，资源走 YooAsset，配置走 Luban，异步用 UniTask，界面用框架自带的 UIModule。
 
-## 1. 运行
+## 怎么跑起来
 
-- Unity 2022.3.62f3c1
-- 启动场景：`Assets/Scenes/GameStart/GameStart.unity`
-- 战斗场景：`Assets/BundleAssets/Scenes/Defense90/Defense90.unity`（正常）、`Defense90Stress.unity`（压力）
+Unity 版本 2022.3.62f3c1。打开 `Assets/Scenes/GameStart/GameStart.unity` 直接 Play 就行，首页有个按钮切正常/压力模式，点开始进战斗。两个战斗场景在 `Assets/BundleAssets/Scenes/Defense90/` 下面，`Defense90.unity` 是正常，`Defense90Stress.unity` 是压力。
 
-Editor 里打开 `GameStart.unity` 直接 Play。首页的模式按钮切换正常 / 压力，点开始进战斗。
-
-打抖音包：
+打抖音包的步骤：
 
 1. Build Settings 切到 WebGL。
-2. 菜单 `DGame Tools/Build/一键打包AB`（快捷键 F8），打资源包到 `Assets/StreamingAssets/yoo`。这个目录不进仓库，克隆下来以后第一次打包前必须先做这一步。
-3. 打开抖音 SDK 的构建面板（配置在 `Assets/Editor/StarkBuilderSetting.asset`），输出到 `tt-minigame/`。
-4. 抖音开发者工具导入 `tt-minigame/`，真机调试或扫码预览。
+2. 按 F8（菜单 `DGame Tools/Build/一键打包AB`）打资源包，会输出到 `Assets/StreamingAssets/yoo`。这个目录没进仓库，刚克隆下来的话一定要先打一次。
+3. 打开抖音 SDK 的构建面板（设置存在 `Assets/Editor/StarkBuilderSetting.asset`），输出到 `tt-minigame/`。
+4. 用抖音开发者工具导入 `tt-minigame/`，真机调试或者扫码预览。
 
-改配置：编辑 `../GameConfig/Datas/守点*.xlsx`，然后跑 `../GameConfig/一键转表工具_Bin.bat`，代码会生成到 `Assets/Scripts/HotFix/GameProto/LubanConfig/`。生成的文件不要手改。导表需要装 .NET 8 运行时。
+改数值的话，去改 `../GameConfig/Datas/` 下面守点开头的几张 xlsx，然后双击 `../GameConfig/一键转表工具_Bin.bat`，会重新生成 `Assets/Scripts/HotFix/GameProto/LubanConfig/` 里的代码。导表要装 .NET 8 运行时，生成出来的代码别手改。
 
-仓库里没有放这些东西，都能重新生成：`Library`、`Temp`、`Logs`、资源包（`Bundles`、`StreamingAssets`）、构建输出（`Builds`、`tt-minigame`）、`*.csproj`。HybridCLR 在这个工程里是关着的，所以 `HybridCLRData` 也不需要。`Tools/unity.exe` 是本地用的命令行工具，超过 GitHub 的单文件大小限制，也没放进来。
+仓库里没放 `Library`、`Temp`、`Logs`、`*.csproj`、资源包（`Bundles`、`StreamingAssets`）和构建输出（`Builds`、`tt-minigame`），这些都能重新生成。HybridCLR 在这个工程里没开，`HybridCLRData` 用不上。`Tools/unity.exe` 是我本地用的命令行工具，超过了 GitHub 单文件 100 MB 的上限，也没传。
 
-## 2. 工程结构
+## 工程结构
+
+玩法代码都在 `Assets/Scripts/HotFix/GameLogic/Defense90/`：
 
 ```
-GameUnity/
-├─ Assets/
-│  ├─ DGame/                         框架
-│  ├─ Scripts/HotFix/GameLogic/
-│  │  ├─ Defense90/
-│  │  │  ├─ DefenseRound.cs          规则层：计时、刷怪、索敌、伤害、技能结算，不碰表现
-│  │  │  ├─ DefenseGame.cs           玩法控制：状态、输入、HUD、切后台、最高分
-│  │  │  ├─ DefenseBattlefield.cs    战场表现：对象池、深度排序、水花/水弹/击杀水泡/金币、相机叠加
-│  │  │  ├─ DefenseVfxTierInfo.cs    两档特效的差异说明，编辑器对比面板读这里
-│  │  │  ├─ DefenseSkill*.cs         技能拖拽、时间轴、三阶段表现
-│  │  │  ├─ DefensePerfMonitor.cs    压力模式的性能面板
-│  │  │  ├─ DefenseSettings.cs       音量、特效档位、震动等设置
-│  │  │  └─ DefenseAudio.cs 等       音频、震动、引导、飘字
-│  │  ├─ UI/Defense/                 首页、战斗、暂停、结算、设置
-│  │  └─ ConfigMgr/DefenseConfigMgr  配置表访问
-│  ├─ Scripts/HotFix/GameProto/      Luban 生成代码
-│  ├─ BundleAssets/                  打包资源：场景、预制体、Shader、音频、UI
-│  ├─ BundleAssets/Shaders/Defense/  DefenseWater / DefenseEffectSprite / DefenseOrbitalPulse
-│  ├─ Editor/DefenseSkillEditor.cs   特效编辑器
-│  └─ Tests/Defense90/               EditMode / PlayMode 测试
-└─ tt-minigame/                      抖音包输出目录
+DefenseRound.cs        规则：计时、刷怪、索敌、伤害、技能结算，不碰任何表现
+DefenseGame.cs         玩法控制：状态切换、输入、HUD、切后台、最高分
+DefenseBattlefield.cs  战场表现：对象池、深度排序、水花、水弹、击杀水泡、金币
+DefenseSkill*.cs       技能的拖拽、时间轴和三段表现
+DefenseVfxTierInfo.cs  两档特效的差异描述，编辑器对比面板会读
+DefensePerfMonitor.cs  压力模式左下角的性能面板
+DefenseSettings.cs     音量、特效档位、震动这些设置
+DefenseAudio.cs 等     音频、震动、新手引导、飘字
 ```
 
-### 数据结构
+界面在 `GameLogic/UI/Defense/`，配置表的读取在 `GameLogic/ConfigMgr/DefenseConfigMgr.cs`。Shader 在 `Assets/BundleAssets/Shaders/Defense/`，特效编辑器是 `Assets/Editor/DefenseSkillEditor.cs`，测试在 `Assets/Tests/Defense90/`。
 
-- `DefenseRules`：一局要用的全部数值，由模式、敌人、技能三张表拼出来。测试里可以直接改字段造极端情况。
-- `DefenseRound`：规则状态机，状态有 Ready / Playing / Paused / Won / Lost。
-- `DefenseEnemy`、`DefenseImpact`、`DefenseProjectile`、`DefenseFloatText`、`DefenseDeath`：都是 struct，放在定长数组里。敌人数组的长度取模式表的 `Capacity`，飘字、水弹这些是 48 到 64 个槽，循环复用。
+数据上，`DefenseRules` 装一局要用的全部数值，由模式、敌人、技能三张表拼出来；`DefenseRound` 是规则本体，状态就 Ready、Playing、Paused、Won、Lost 几种。敌人、水花、水弹、飘字、死亡动画全是 struct，放在定长数组里循环用。敌人数组的长度跟着模式表的 `Capacity` 走，其他的是 48 到 64 个槽。
 
-为什么这么拆：规则和表现分开以后，`DefenseRound` 可以在 EditMode 测试里用固定种子完整跑一局，不需要场景。表现层每帧只读规则状态。敌人和特效全部用定长数组加预先建好的对象池，战斗中不 new、不 Instantiate，WebGL 上 GC 很贵，这一点比较重要。
+这么拆主要是两个考虑。一是规则和表现分开，`DefenseRound` 不依赖场景，测试里用固定种子就能完整跑一局。二是 WebGL 上 GC 很伤，所以战斗中不 new 对象、不 Instantiate，敌人和特效都是开局前建好的池子。
 
-### 配置表（`GameConfig/Datas/`）
+## 配置
 
-| 表 | 能调什么 |
-|----|----------|
-| 守点模式配置表 | 单局时长、基地血量、刷怪间隔和后期缩放、每批数量、同屏上限、随机种子、重甲频率、炮塔射速/伤害/射程 |
-| 守点敌人配置表 | 生命、速度、攻击、攻击间隔、攻击距离（近战或远程水弹）、体型、分数 |
-| 守点技能配置表 | 冷却、半径、伤害、三个阶段的时长、颜色、强度、震屏 |
-| 守点特效档位表 | 完整 / 简化两档 |
+四张表都在 `GameConfig/Datas/`：
 
-正常和压力两个模式只差两项：每批刷怪数（1 只 vs 8 只）和同屏上限（256 vs 512），其余数值一样。
+- 守点模式配置表：单局时长、基地血量、刷怪间隔和后期加速、每批几只、同屏上限、随机种子、几只出一只乌龟、炮塔射速/伤害/射程
+- 守点敌人配置表：血量、速度、攻击、攻击间隔、攻击距离（近战还是远程）、体型、分数
+- 守点技能配置表：冷却、半径、伤害、三个阶段各自的时长、颜色、强度、震屏
+- 守点特效档位表：完整和简化两档
 
-## 3. 玩法
+正常模式和压力模式只差两个数：每批刷 1 只还是 8 只，同屏上限 256 还是 512。
 
-- 守住 90 秒算赢，基地血量归零算输。
-- 两种敌人：兔子跑得快、血少、近战；乌龟慢、血厚，在远处吐水弹，水弹飞到基地才扣血，所以可以用技能先把乌龟清掉。
-- 技能：按住按钮拖到战场上瞄准，松手放出去；拖回按钮或拖出战场就取消。有冷却遮罩和就绪提示。
-- 界面：首页、战斗 HUD、暂停、结算（破纪录会提示）、设置。
-- 结算后可以重开。最高分和设置存在 PlayerPrefs 里，杀掉进程重进还在。
-- 切后台会暂停，回来以后弹暂停页，玩家点继续才恢复。回到前台的第一帧不会把后台的时间一次性补上，所以不会突然刷出一堆怪。
+## 玩法
 
-## 4. TA 实现
+守满 90 秒赢，基地血量掉光输。
 
-特效统一做成"卡通糖果水"的样子：青蓝色的水、奶白色的泡沫、深青色描边，和暖色的花园背景能区分开，又不会太跳。Shader 都是 URP HLSL，不采样贴图。
+敌人有两种。兔子跑得快、血少，冲到脸上咬；乌龟慢、血厚，站远了吐水弹，水弹飞到基地才扣血，所以看到乌龟扎堆可以用技能先清掉。
 
-技能分三个阶段：范围提示 → 水柱落下 → 命中扩散。
+技能是按住按钮往战场上拖，松手放出去。拖回按钮上或者拖出战场就算取消。按钮上有冷却遮罩，好了会有提示。
 
-- `DefenseWater.shader`：用 `_Mode` 区分 5 种形态，0 范围提示、1 水柱、2 水花扩散、3 水滴和阴影、4 彗星水弹。普攻水花的播放进度写在顶点 alpha 里，是否击杀写在顶点绿通道里，所有水花共用一份材质，这样能合批。
-- `DefenseEffectSprite.shader`：击杀时的水泡（鼓起来再破掉）和金币的星芒闪光，进度也走顶点 alpha。
-- `DefenseOrbitalPulse.shader`：早期做的 UI 层技能脉冲，后来改用水系方案，现在战斗里没用到，只保留在编辑器检查里。
+界面有首页、战斗 HUD、暂停、结算（破纪录会提示）和设置。结算后能直接重开，最高分和设置存在 PlayerPrefs，杀进程再进来还在。
 
-可调参数分三处：时长、半径、伤害、震屏在技能配置表；水和泡沫、描边的颜色、水柱尺寸、技能弹射水滴数在 `DefenseWaterTimeline.asset`；各档的水滴数量、拖尾开关在特效档位表。
+切到后台会暂停，回来先弹暂停页，玩家点了继续才往下走。回前台那一帧不会把后台这段时间一次补上，不会一下子刷出一堆怪。
 
-编辑器入口是菜单 `DGame/Defense/水系技能时间轴`：
-- 时间轴页可以拖动时间，两档并排显示，下面列出差异；
-- 特效库页把 9 种特效的两档缩略图循环播放；
-- 材质与校验页检查 Shader、材质、预制体引用和档位表有没有配错。
+## TA 部分
 
-### 完整 / 简化两档
+特效风格我定成了"卡通糖果水"：青蓝的水、奶白的泡沫、深青色的描边，跟暖色的花园背景能拉开，又不至于太跳。Shader 全是手写的 URP HLSL，没有采样贴图。
 
-设置页可以切换，对应特效档位表的两行。
+技能分三段：先出范围提示圈，然后一根水柱砸下来，最后水花往外炸开。
+
+主要的 Shader 是 `DefenseWater.shader`，用 `_Mode` 切 5 种形态：范围提示、水柱、水花扩散、水滴和阴影、彗星水弹。普攻打出来的水花很多，我把每个水花的播放进度塞进顶点 alpha，是不是击杀塞进顶点的绿通道，这样所有水花能共用一份材质，合成一个批次。`DefenseEffectSprite.shader` 负责击杀时的水泡（先鼓起来再破）和金币的星芒，也是同样的办法传进度。还有一个 `DefenseOrbitalPulse.shader`，是最早做的 UI 层技能脉冲，后来整体换成水系方案就没再用了，现在只有编辑器检查还引用它。
+
+能调的参数分在三个地方：时长、半径、伤害、震屏在技能配置表里；水和泡沫的颜色、描边色、水柱尺寸、技能炸出来的水滴数在 `DefenseWaterTimeline.asset` 里；每档的水滴数量和拖尾开关在特效档位表里。
+
+另外写了个编辑器窗口，菜单 `DGame/Defense/水系技能时间轴`。时间轴页可以拖时间看每一帧，两档并排放，下面列出差异；特效库页把 9 种特效的两档缩略图一起循环播放；最后一页检查 Shader、材质、预制体引用和档位表有没有配错。
+
+### 完整档和简化档
+
+设置页里可以切，对应特效档位表的两行。具体差别：
 
 | 特效 | 完整 | 简化 |
 |------|------|------|
 | 范围提示 | 旋转虚线环、描边、焦散水面、气泡、中心准星 | 一个实线环，平涂 |
 | 水柱 | 分层水纹、高光带、气泡、底部泡沫裙边、边缘抖动 | 直边双色柱加描边 |
 | 技能命中 | 三层波纹、12 颗弹射水滴、焦散 | 一个环 |
-| 普攻水花 | 双环，水滴普通 6 颗 / 击杀 10 颗 | 单环，水滴 2 颗 / 4 颗 |
+| 普攻水花 | 双环，水滴普通 6 颗、击杀 10 颗 | 单环，水滴 2 颗、4 颗 |
 | 普攻水弹 | 彗星拖尾 | 圆水滴 |
-| 击杀 | 水泡带高光鼓起再破裂飞溅，金币有星芒 | 水泡直接破，金币不闪 |
+| 击杀 | 水泡带高光鼓起再炸开，金币有星芒 | 水泡直接破，金币不闪 |
 | 震屏、伤害数字 | 开 | 关 |
 
-档位表字段：
+档位表里对应的字段是 `ShaderDetail`（水纹、高光、气泡、焦散这些装饰）、`Fragments` / `KillFragments`（水滴数，6/10 对 2/4）、`Glow`（水弹拖尾）、`Shake`（震屏）和 `DamageText`（伤害飘字）。
 
-| 字段 | 完整 | 简化 | 管什么 | 简化的代价 |
-|------|------|------|--------|------------|
-| `ShaderDetail` | 开 | 关 | 水纹、高光、气泡、焦散、多层波纹、技能水滴、金币闪光 | 画面层次少了，打击感弱一些 |
-| `Fragments` / `KillFragments` | 6 / 10 | 2 / 4 | 普攻、击杀水花的水滴数 | 命中和击杀没那么爽 |
-| `Glow` | 开 | 关 | 水弹拖尾 | 看不太出弹道方向 |
-| `Shake` | 开 | 关 | 技能和基地受击时震屏 | 没有明显代价 |
-| `DamageText` | 开 | 关 | 伤害飘字 | 看不到伤害数值 |
+代价也很直接：简化档画面层次少了，打击感弱一截；水滴少了，命中和击杀没那么爽；没拖尾以后不太看得出弹道方向；关了飘字就看不到伤害数值。震屏关掉倒没什么损失。
 
-简化档没有加新的 Shader 变体，同一份 Shader 里用 `_Detail` 跳过装饰部分，所以包体和 Shader 编译时间都不变。
+简化档没有加新的 Shader 变体，是在同一份 Shader 里用 `_Detail` 把装饰部分跳过去，所以包体和 Shader 编译时间不受影响。
 
-实测：iQOO 9 压力模式各跑 60 秒，两档帧耗时差不多（P95 23 vs 24 ms，P99 都是 40 ms），飘字耗时从 0.09 降到 0.01 ms。所以这台机器上特效不是瓶颈，简化档主要是给更差的机器留的。注意这组数据是在糖果水特效改版之前测的，新版两档还没重新测。详细见 [PERFORMANCE.md](PERFORMANCE.md)。
+两档我在 iQOO 9 上用压力模式各跑了 60 秒，帧耗时几乎一样（P95 23 和 24 ms，P99 都是 40 ms），只有飘字的耗时从 0.09 降到了 0.01 ms。也就是说在这台手机上特效不是瓶颈，简化档更多是给差一点的机器准备的。要说明的是，这组数据是糖果水特效改版之前测的，改版之后的两档还没重新测。细节在 [PERFORMANCE.md](PERFORMANCE.md)。
 
-## 5. 优化记录
+## 优化过程
 
-性能题的一页说明在 [PERFORMANCE.md](PERFORMANCE.md)。下面是整个过程中踩过的坑：
+性能题的那一页单独写在 [PERFORMANCE.md](PERFORMANCE.md)，这里记一下整个过程里踩的坑。
 
-| 问题 | 怎么处理的 | 代价 |
-|------|------------|------|
-| 一开始按 APK 的路子在做，后来才搞清楚抖音小游戏应该走 WebGL | 改成 WebGL 构建 | 返工 |
-| 第一个 WebGL 包启动 30 多秒（开发者工具：FP 40100 ms，渲染 35028 ms，callMain 3168 ms） | 首包只放启动场景和必要代码，战斗资源走 YooAsset 按需加载；字体裁剪、合图集减下载量；开 WebGL2、SDK 压缩和后台内存优化；WebGL 内存固定 128 MB。之后真机 callMain 1736 ms，总加载 2846 ms（iQOO 9） | 进战斗前多一次资源加载 |
-| 首包太大 | 首包压到 0.86 MB，其余资源放远程 | 第一次进需要下载 |
-| 为了省一点包体把代码剥离等级拉到 High，结果大量代码被裁掉，运行报错 | 用 `Assets/HybridCLRGenerate/link.xml` 和 `Assets/Scripts/DisStripCode/` 保住反射和生成代码，最后剥离等级退回 Minimal | 包体大一点 |
-| 中文字体太大 | 只导出用到的字 | 加新文案要重新导字体 |
-| 打图集、压缩后 UI 裁切不对 | `Atlas_Defense` 和 `Atlas_Defense_UI` 关掉旋转和紧密打包（紧密打包按网格裁，导致 UI 错位），padding 2；WebGL 用 ASTC 6x6，最大 2048 | 图集空白多，体积稍大 |
-| 怪多的时候一打就卡 | 对象池、定长数组、共享材质加顶点参数合批、增量深度排序、HUD 小变化合并提交，普攻不再触发全场顿帧 | 见 PERFORMANCE.md |
+最开始我是按 APK 的思路在做，后来才弄明白抖音小游戏应该走 WebGL，中间返工了一次。
 
-## 6. 已知问题
+第一个 WebGL 包启动要 30 多秒，开发者工具里 FP 40100 ms、渲染 35028 ms、callMain 3168 ms。后来照着抖音的文档一项项改：首包只留启动场景和必要的代码，战斗资源改成用到再下载；字体裁剪、合并图集，减少下载量；打开 WebGL2、SDK 压缩和后台内存优化；WebGL 内存固定成 128 MB。改完之后在 iQOO 9 上 callMain 1736 ms，总加载 2846 ms，首包 0.86 MB。代价是进战斗前多了一次资源加载，第一次进游戏要下载。
 
-- 只在 iQOO 9 上测过，中低端机的压力模式还会掉帧。
-- 开发者工具的性能测试里 TTI 没数据（没做主动上报），wasm 编译和 callMain 两项还是未通过。
-- 模拟器会提示不支持 ASTC，和真机纹理支持的差异没逐个核对。不支持 ASTC 的设备会软解，内存和加载时间都会上去。
-- 压力模式下约 2% 的帧超过 33 ms，HUD 偶尔有几十毫秒的尖峰，原因还没定位。
-- `DefenseOrbitalPulse` 的材质还挂在 `DefenseAssets.asset` 上，运行时没用到，后面可以清掉。
+为了再省一点包体，我把代码剥离等级拉到了 High，结果打包时一大片代码被裁掉，运行直接报错。后来用 `Assets/HybridCLRGenerate/link.xml` 和 `Assets/Scripts/DisStripCode/` 把反射和生成代码保住，剥离等级最后退回了 Minimal，包体大了一点。
 
-## 7. 用时
+中文字体整个打进去太大，只好把用到的字单独导出来。以后加新文案就得重新导一次字体。
 
-总共 6 小时左右：
+图集压缩以后 UI 有几处裁切不对。查下来是紧密打包按网格裁的问题，`Atlas_Defense` 和 `Atlas_Defense_UI` 关掉了旋转和紧密打包，padding 设成 2，WebGL 平台用 ASTC 6x6、最大 2048。图集里空白多了，体积稍微大一些。
 
-- 玩法原型：0.5 小时
-- 生图、音乐音效、换资源和细节完善：3 小时
-- 研究抖音小游戏流程和 WebGL（启动、内存、包体、剥离、字体、图集）：2.5 小时
+怪多的时候一打就卡，这个是性能题的主体，主要做了对象池、定长数组、共享材质加顶点参数合批、增量深度排序、HUD 小变化攒一下再提交，以及普攻不再触发全场顿帧。具体看 PERFORMANCE.md。
 
-时间大部分花在平台适配和性能上，玩法只做了题目要求的两种敌人和一个技能。
+## 已知问题
 
-## 8. 第三方素材、插件和 AI
+- 只在 iQOO 9 一台手机上测过，中低端机跑压力模式还是会掉帧。
+- 开发者工具的性能测试里 TTI 没有数据（没做主动上报），wasm 编译和 callMain 两项还是没通过。
+- 模拟器会提示不支持 ASTC，各个真机的纹理支持情况我没有逐台核对。不支持 ASTC 的机器会软解，内存和加载时间都会上去。
+- 压力模式下大概 2% 的帧超过 33 ms，HUD 偶尔会冒出几十毫秒的尖峰，原因还没查到。
+- `DefenseOrbitalPulse` 的材质还挂在 `DefenseAssets.asset` 上，运行时用不到，之后可以清掉。
 
-- 框架：DGame，自带 YooAsset、Luban、UniTask、DOTween 等。
-- 抖音小游戏 Unity SDK（StarkSDK / TTSDK）。
-- 美术：AI 生图，工具是 image2.6。
-- 音乐音效：网上的开源音效。
-- AI 编码：codex gpt6.1-sol、claude opus5.5，主要拿来查框架 API、写样板代码、测试和文档。玩法设计、架构和性能定位是我自己做的，代码都看过，可以解释和改。
+## 用时
 
-笔试题作答在 [笔试题作答.md](笔试题作答.md)。
+前后加起来 6 个小时左右。原型半小时；生图、做音乐音效、替换资源、补细节花了 3 个小时；剩下两个半小时基本都在研究抖音小游戏的流程和 WebGL，包括启动、内存、包体、代码剥离、字体和图集。
+
+时间大头花在了平台适配和性能上，玩法内容就只做了题目要求的两种敌人和一个技能。
+
+## 第三方和 AI
+
+- 框架是 DGame，YooAsset、Luban、UniTask、DOTween 这些都是框架带的。
+- 抖音小游戏的 Unity SDK（StarkSDK / TTSDK）。
+- 美术是 AI 生图，用的 image2.6。
+- 音乐音效是网上找的开源素材。
+- 写代码用了 codex gpt6.1-sol 和 claude opus5.5，主要是查框架 API、写样板代码、补测试和文档。玩法设计、架构和性能定位是我自己做的，代码我都看过，能讲清楚，也能改。
+
+笔试题的作答在 [笔试题作答.md](笔试题作答.md)。
