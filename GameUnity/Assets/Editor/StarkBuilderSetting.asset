@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1677285531, guid: 004ba930dd98ac248bbfa36a20e36707, type: 3}
+  m_Name: StarkBuilderSetting
+  m_EditorClassIdentifier: 
+  tag: 0
+  wasmResourceUrl: http://
+  OutputDir: E:\UnityProjects\DGame-main\GameUnity\tt-minigame
+  useByteAudioAPI: 0
+  wasmMemorySize: 128
+  isWebGL2: 1
+  needCompress: 1
+  symbolMode: 0
+  profiling: 0
+  clearStreamingAssets: 0
+  buildOptions: 0
+  wasmSubFramework: 0
+  hideAfterCallmain: 1
+  disableLoadingPage: 0
+  useDataCDNAsStreamingAssetsUrl: 0
+  optimizeWebGLMemoryInBackground: 1
+  assetBundleFSEnabled: 1
+  assetBundleBufferCapacity: 128
+  assetBundleBufferTTL: 5
+  preloadFiles: 
+  CDN: 
+  preloadDataListUrl: 
+  dataLoadType: 1
+  dataFileSubPrefix: 
+  iOSDevicePixelRatio: 0
+  urlCacheList: []
+  dontCacheFileNames: []
+  enableEmscriptenGlx: 1
+  isDevBuild: 0
+  stripEngineCode: 0
+  appHost: 2
+  compressMethod: 1
+  runtimeEnv: 0
+  framework: 1
+  architecture: 2
+  miniApkVersion: 1
+  scriptingBackend: 0
+  NativeWhiteListRegex:
+  - com.bytedance.starksdk
+  - _Backup~
+  _appId: tt3d304b8da34f0c8b07
+  version: 
+  autoVersion: 0
+  _webglPackagePath: E:\UnityProjects\DGame-main\GameUnity\tt-minigame\tt-minigame
+  _orientation: 0
+  _iOSPerformancePlus: 0
+  _menuButtonStyle: 0
+  _publishType: 0
+  publishDesc: 
+  idePath: "D:/bytedminiprogram-ide/@bytedminiprogram-ide/\u6296\u97F3\u5F00\u53D1\u8005\u5DE5\u5177.exe"
+  isConvert: 0
+  isOldBuildFormat: 0

@@ -1,0 +1,8 @@
+{
+    "name": "Defense90.Tests",
+    "references": ["GameLogic", "GameProto", "DGame.Runtime", "DGame.Editor", "Unity.ugui"],
+    "includePlatforms": ["Editor"],
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "optionalUnityReferences": ["TestAssemblies"]
+}

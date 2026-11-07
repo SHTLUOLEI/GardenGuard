@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!612988286 &1
+SpriteAtlasAsset:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 2
+  m_MasterAtlas: {fileID: 0}
+  m_ImporterData:
+    packables:
+    - {fileID: 21300000, guid: a21cc059e450dc5419f5e4ed923f3ec9, type: 3}
+    - {fileID: 21300000, guid: 7b97e237cc68ebd4eba4e46d4ae849df, type: 3}
+    - {fileID: 21300000, guid: 8abc6b6b747e0624b99ae64101cef0f6, type: 3}
+    - {fileID: 21300000, guid: a3497e75960251141b87e33fad802e19, type: 3}
+    - {fileID: 21300000, guid: 4016388fa45abba42bef4ac064ae5213, type: 3}
+    - {fileID: 21300000, guid: 7ae2cbf3612ae7546a8f8fe9cde38c35, type: 3}
+    - {fileID: 21300000, guid: ebe67a72ade7226419ab4d50edfdfd51, type: 3}
+    - {fileID: 21300000, guid: 259a12413f5127848b4fe880443a31ec, type: 3}
+    - {fileID: 21300000, guid: d5160bddce3f3b5428db5e6d89df881b, type: 3}
+    - {fileID: 21300000, guid: 49099964c8b62b4419cf431a79443cc1, type: 3}
+    - {fileID: 21300000, guid: c23b6f4023d26b944981795a6c0cf331, type: 3}
+    - {fileID: 21300000, guid: 6b3fde3cd231c2747adec750b5e0b757, type: 3}
+    - {fileID: 21300000, guid: 28f0fb6e575c14f45aadbde92b90a234, type: 3}
+    - {fileID: 21300000, guid: 460655c95dd4b4e4ca624c5ce64ad630, type: 3}
+    - {fileID: 21300000, guid: 43557757ab9d8084d93fc6eae013534a, type: 3}
+    - {fileID: 21300000, guid: 82aa2d4f98ab27f45938ca0a3f63ece0, type: 3}
+    - {fileID: 21300000, guid: 22adaf2da7d3b444b85c0afac83e523c, type: 3}
+    - {fileID: 21300000, guid: f1c92eb861c793944b1bab745d634f59, type: 3}
+    - {fileID: 21300000, guid: 83ea2880dab781f47a3b664095d93ac5, type: 3}
+    - {fileID: 21300000, guid: 69303a045cb15dd4e8c1de9a2f46e349, type: 3}
+    - {fileID: 21300000, guid: cbb6cf67d0fa01744aa6ac3fa3fd2077, type: 3}
+    - {fileID: 21300000, guid: 97cf09aaec70a574ea9e9d33e4bdf1b7, type: 3}
+    - {fileID: 21300000, guid: fae8594eb4c32f9459319f4ddfabc7b2, type: 3}
+  m_IsVariant: 0

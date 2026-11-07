@@ -1,0 +1,14 @@
+{
+    "name": "Defense90.PlayModeTests",
+    "references": ["GameLogic", "DGame.Runtime", "UniTask", "Unity.ugui"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": ["TestAssemblies"]
+}

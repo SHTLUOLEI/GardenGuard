@@ -1,0 +1,38 @@
+[
+  {
+    "ID": 1,
+    "Name": "标准",
+    "Duration": 90,
+    "BaseHealth": 150,
+    "SpawnInterval": 0.85,
+    "SpawnIntervalEndScale": 0.5,
+    "SpawnBatch": 1,
+    "Capacity": 256,
+    "Seed": 90,
+    "TankEvery": 4,
+    "RunnerId": 1,
+    "TankId": 2,
+    "ShotInterval": 0.27,
+    "ShotDamage": 18,
+    "ShotRange": 650,
+    "SkillId": 1
+  },
+  {
+    "ID": 2,
+    "Name": "压力",
+    "Duration": 90,
+    "BaseHealth": 150,
+    "SpawnInterval": 0.85,
+    "SpawnIntervalEndScale": 0.5,
+    "SpawnBatch": 8,
+    "Capacity": 512,
+    "Seed": 90,
+    "TankEvery": 4,
+    "RunnerId": 1,
+    "TankId": 2,
+    "ShotInterval": 0.27,
+    "ShotDamage": 18,
+    "ShotRange": 650,
+    "SkillId": 1
+  }
+]

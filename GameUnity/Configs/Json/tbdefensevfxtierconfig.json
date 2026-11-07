@@ -1,0 +1,22 @@
+[
+  {
+    "ID": 1,
+    "Name": "完整特效",
+    "ShaderDetail": true,
+    "Fragments": 6,
+    "KillFragments": 10,
+    "Glow": true,
+    "Shake": true,
+    "DamageText": true
+  },
+  {
+    "ID": 2,
+    "Name": "简化特效",
+    "ShaderDetail": false,
+    "Fragments": 2,
+    "KillFragments": 4,
+    "Glow": false,
+    "Shake": false,
+    "DamageText": false
+  }
+]

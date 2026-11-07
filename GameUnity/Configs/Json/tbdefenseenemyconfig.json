@@ -1,0 +1,24 @@
+[
+  {
+    "ID": 1,
+    "Name": "冲冲兔",
+    "Health": 24,
+    "Speed": 65,
+    "Attack": 7,
+    "AttackInterval": 1.2,
+    "AttackRange": 52,
+    "Score": 10,
+    "Size": 58
+  },
+  {
+    "ID": 2,
+    "Name": "喷喷龟",
+    "Health": 105,
+    "Speed": 26,
+    "Attack": 12,
+    "AttackInterval": 2.4,
+    "AttackRange": 210,
+    "Score": 30,
+    "Size": 84
+  }
+]

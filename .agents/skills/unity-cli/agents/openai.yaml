@@ -1,0 +1,6 @@
+﻿interface:
+  display_name: "DGame Unity CLI"
+  short_description: "DGame 工程内 Unity 对象操作、原生命令、编译测试与连接排查"
+  default_prompt: "使用 $unity-cli 操作和验证当前 DGame 工程，按实时工具描述或 unity command 调用原生命令，并提供实际结果。"
+policy:
+  allow_implicit_invocation: true

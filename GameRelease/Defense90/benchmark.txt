@@ -1,0 +1,8 @@
+Defense90 target selection microbenchmark
+Unity Editor only, not device/frame-time evidence.
+Unity=2022.3.62f3c1; CPU=12th Gen Intel(R) Core(TM) i9-12900H; snapshot=512; iterations=3000; warmup=100
+BASELINE: mean_us=96.501; p95_us=128.700; checksum=45000; result=PASS
+GC.Alloc is not measured by this synchronous microbenchmark; use device Profiler for allocation/frame metrics.
+MODIFIED: mean_us=9.121; p95_us=10.300; checksum=45000; result=PASS
+GC.Alloc is not measured by this synchronous microbenchmark; use device Profiler for allocation/frame metrics.
+Input: same fixed 512 enemies, same range and nearest/tie semantics; no quality/resolution/content changes.
